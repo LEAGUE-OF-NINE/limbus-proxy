@@ -1,4 +1,6 @@
-﻿namespace Tomat.LimbusServer.API;
+﻿using System;
+
+namespace Tomat.LimbusServer.API;
 
 /// <summary>
 ///     Provides APIs for setting up and managing an <see cref="IServer"/>.

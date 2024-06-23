@@ -1,4 +1,6 @@
-﻿namespace Tomat.LimbusServer.API;
+﻿using System;
+
+namespace Tomat.LimbusServer.API;
 
 /// <summary>
 ///     Provides a server interface for the Limbus server.
