@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Tomat.LimbusServer.API;
 
@@ -6,16 +7,20 @@ namespace Tomat.LimbusServer.API;
 ///     Provides a server interface for the Limbus server.
 /// </summary>
 /// <remarks>
-///     <see cref="IServerProvider"/>s should be used to initialize and start
-///     servers. As such, there is not exposed API for starting a server from
-///     the <see cref="IServer"/> instance.
-///     <br />
-///     Servers should be closed by invoking <see cref="IDisposable.Dispose"/>
-///     (preferably automatically through this dispose pattern).
+///     Servers should be stopped/terminated by calling
+///     <see cref="IDisposable.Dispose"/>; this is most preferably done through
+///     the dispose pattern (i.e. <see langword="using"/> statement) if they
+///     have an internal condition for termination, otherwise one should listen
+///     for a SIGTERM signal or similar and handle disposal manually.
 /// </remarks>
 public interface IServer : IDisposable {
     /// <summary>
-    ///     The server provider that created this server instance.
+    ///     The current state of the server.
     /// </summary>
-    IServerProvider ServerProvider { get; }
+    ServerState State { get; }
+
+    /// <summary>
+    ///     Starts the server.
+    /// </summary>
+    Task Start();
 }
