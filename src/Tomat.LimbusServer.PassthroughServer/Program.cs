@@ -11,13 +11,14 @@ internal static class Program {
     private const string argument_listening_addresses = "--listening-addresses";
 
     /// <summary>
-    ///     The target address; defaults to <c>www.limbuscompanyapi.com</c>.
+    ///     The target address; defaults to
+    ///     <c>https://www.limbuscompanyapi.com</c>.
     /// </summary>
     private const string argument_target_address = "--target-address";
 
     internal static async Task Main(string[] args) {
         var listeningAddresses = (GetArgument(args, argument_listening_addresses) ?? "http://localhost:80/").Split(' ');
-        var targetAddress = GetArgument(args, argument_target_address) ?? "www.limbuscompanyapi.com";
+        var targetAddress = GetArgument(args, argument_target_address) ?? "https://www.limbuscompanyapi.com";
 
         var server = API.PassthroughServer.Create(listeningAddresses, targetAddress);
         await StartServer(server);
