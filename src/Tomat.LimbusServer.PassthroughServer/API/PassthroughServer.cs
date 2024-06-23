@@ -26,7 +26,7 @@ public sealed class PassthroughServer : IPassthroughServer {
 
     public event Func<HttpResponseMessage, Task>? OnPreProcessResponse;
 
-    public event Func<HttpListenerResponse, Task?>? OnPostProcessResponse;
+    public event Func<HttpListenerResponse, Task>? OnPostProcessResponse;
 
     private readonly HttpListener listener = new();
     private readonly HttpClient client = new();

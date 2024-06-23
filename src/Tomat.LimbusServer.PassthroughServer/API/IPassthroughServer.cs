@@ -49,5 +49,5 @@ public interface IPassthroughServer : IServer {
     ///     Invoked when a response has been processed, but before it's been
     ///     sent.
     /// </summary>
-    event Func<HttpListenerResponse, Task?> OnPostProcessResponse;
+    event Func<HttpListenerResponse, Task>? OnPostProcessResponse;
 }
