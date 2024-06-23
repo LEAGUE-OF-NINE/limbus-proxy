@@ -99,7 +99,7 @@ internal sealed class PassthroughLogger(float priority) : PassthroughServerHooks
         var hexByteString = BitConverter.ToString(body).Replace("-", " ");
 
         WritePadded("ENCRYPTED");
-        WriteLine($" ({timestamp})" + hexByteString);
+        WriteLine($" ({timestamp}) " + hexByteString);
     }
 
     private static void WriteHeaders(NameValueCollection headers) {
@@ -148,7 +148,7 @@ internal sealed class PassthroughLogger(float priority) : PassthroughServerHooks
         set => ConsoleManager.SetConsoleColor(value);
     }
 
-    private static void Write(string text) {
+    private static void Write(string? text) {
         ConsoleManager.ConsoleStream?.Write(text);
     }
 
