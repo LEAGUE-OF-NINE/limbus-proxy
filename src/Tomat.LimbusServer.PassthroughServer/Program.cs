@@ -33,7 +33,7 @@ internal static class Program {
     internal static async Task Main(string[] args) {
         var arguments = new Arguments(args);
         var ip = arguments.IpAddress;
-        if (ushort.TryParse(arguments.Port, out var port))
+        if (!ushort.TryParse(arguments.Port, out var port))
             throw new ArgumentException($"Invalid port; expected a number between {ushort.MinValue} and {ushort.MaxValue} (but got {arguments.Port}).");
 
         var server = API.PassthroughServer.Create(ip, port);
