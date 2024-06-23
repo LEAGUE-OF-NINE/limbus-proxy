@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.LimbusServer.Passthro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.LimbusServer.Passthrough.API", "Tomat.LimbusServer.Passthrough.API\Tomat.LimbusServer.Passthrough.API.csproj", "{FC6448CA-F005-4D9D-92F2-B527A3B1FF59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.LimbusServer.Passthrough.Logger", "Tomat.LimbusServer.Passthrough.Logger\Tomat.LimbusServer.Passthrough.Logger.csproj", "{2D804A17-477C-4797-B5CC-7E389883E1BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{FC6448CA-F005-4D9D-92F2-B527A3B1FF59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC6448CA-F005-4D9D-92F2-B527A3B1FF59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC6448CA-F005-4D9D-92F2-B527A3B1FF59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D804A17-477C-4797-B5CC-7E389883E1BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D804A17-477C-4797-B5CC-7E389883E1BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D804A17-477C-4797-B5CC-7E389883E1BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D804A17-477C-4797-B5CC-7E389883E1BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
