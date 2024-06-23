@@ -20,7 +20,7 @@ internal static class Program {
         var listeningAddresses = (GetArgument(args, argument_listening_addresses) ?? "http://localhost:80/").Split(' ');
         var targetAddress = GetArgument(args, argument_target_address) ?? "https://www.limbuscompanyapi.com";
 
-        var server = API.PassthroughServer.Create(listeningAddresses, targetAddress);
+        var server = Passthrough.API.PassthroughServer.Create(listeningAddresses, targetAddress);
         await StartServer(server);
 
         // Server is either killed by killing the process or by pressing Ctrl+C.

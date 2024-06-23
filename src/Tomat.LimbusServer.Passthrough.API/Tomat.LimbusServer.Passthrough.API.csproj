@@ -1,14 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Tomat.LimbusServer.Passthrough.API\Tomat.LimbusServer.Passthrough.API.csproj"/>
+        <ProjectReference Include="..\Tomat.LimbusServer.API\Tomat.LimbusServer.API.csproj"/>
     </ItemGroup>
 
 </Project>

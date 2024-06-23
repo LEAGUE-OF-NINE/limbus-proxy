@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Tomat.LimbusServer.API;
 
-namespace Tomat.LimbusServer.PassthroughServer.API;
+namespace Tomat.LimbusServer.Passthrough.API;
 
 /// <summary>
 ///     A simple <see cref="IServer"/> implementation that forwards all requests

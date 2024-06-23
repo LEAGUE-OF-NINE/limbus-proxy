@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tomat.LimbusServer.API;
 
-namespace Tomat.LimbusServer.PassthroughServer.API;
+namespace Tomat.LimbusServer.Passthrough.API;
 
 public sealed class PassthroughServer : IPassthroughServer {
     public ServerState State { get; private set; }
