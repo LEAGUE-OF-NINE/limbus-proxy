@@ -50,7 +50,15 @@ public sealed class PassthroughServer : IPassthroughServer {
 
         State = ServerState.Starting;
 
-        listener.Start();
+        try {
+            listener.Start();
+        }
+        catch (HttpListenerException e) {
+            if (e.Message.Contains("Access is denied."))
+                Console.WriteLine("Failed to start server; access is denied. Try running as an administrator (or changing your port if you're attempting to connect to localhost).");
+
+            throw;
+        }
 
         State = ServerState.Running;
 
