@@ -30,10 +30,15 @@ internal static class Program {
     }
 
     private static async Task StartServer(IServer server) {
-        Console.CancelKeyPress += (_, cancelArgs) => {
-            if (cancelArgs.Cancel)
+        Console.CancelKeyPress += (_, e) => {
+            if (e.Cancel)
                 return;
 
+            Console.WriteLine("Cancel key pressed, killing server...");
+            server.Dispose();
+        };
+
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => {
             Console.WriteLine("Received SIGTERM, killing server...");
             server.Dispose();
         };
