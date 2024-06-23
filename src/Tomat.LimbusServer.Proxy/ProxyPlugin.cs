@@ -19,8 +19,10 @@ internal sealed class ProxyPlugin : BasePlugin {
     private const string default_proxy_url = "http://127.0.0.1";
     private const string default_identifier_key = "DEFAULT_CONSTANT_VALUE_THIS_GENERATES_A_NEW_KEY";
     private const bool default_host_log_passthrough = true;
-    private const string default_host_url = "www.limbuscompanyapi.com";
+    private const string default_host_url = "https://www.limbuscompanyapi.com";
     private static readonly string[] known_urls = [default_host_url, "https://www.limbuscompanyapi-2.com"];
+
+    private static string? logPassthroughUrl;
 
     private static ConfigEntry<string>? proxyUrl;
     private static ConfigEntry<string>? identifierKey;
@@ -33,7 +35,21 @@ internal sealed class ProxyPlugin : BasePlugin {
         proxyUrl = Config.Bind("General", "Proxy URL", default_proxy_url);
         identifierKey = Config.Bind("General", "Identifier Key", default_identifier_key);
         hostLogPassthrough = Config.Bind("General", "Host Log Passthrough", default_host_log_passthrough);
-        Log.LogInfo($"Using proxy url: {proxyUrl.Value} (host url: {GetHostUrl()})");
+
+        if (hostLogPassthrough.Value) {
+            var port = new Random().Next(10000, 20000);
+            logPassthroughUrl = $"http://127.0.0.1:{port}";
+
+            Task.Run(
+                () => {
+                    var server = PassthroughServer.Create([logPassthroughUrl + '/'], GetTargetHostUrl());
+                    PassthroughServerHooks.Hook(server);
+                    server.Start();
+                }
+            );
+        }
+
+        Log.LogInfo($"Using proxy url: {proxyUrl.Value} (target host url: {GetTargetHostUrl()}; actual host url: {GetActualHostUrl()})");
         Log.LogInfo($"Using identifier key: {identifierKey.Value}");
         Log.LogInfo($"Hosting log passthrough server: {hostLogPassthrough.Value}");
 
@@ -55,19 +71,6 @@ internal sealed class ProxyPlugin : BasePlugin {
 
         Log.LogInfo("Applying Harmony patches...");
         new Harmony(MyPluginInfo.PLUGIN_GUID).PatchAll(typeof(ProxyPlugin));
-
-        if (!hostLogPassthrough.Value)
-            return;
-
-        var port = new Random().Next(10000, 20000);
-        var listeningAddress = $"http://127.0.0.1:{port}/";
-
-        Task.Run(
-            () => {
-                using var server = PassthroughServer.Create([listeningAddress], "https://www.limbuscompanyapi.com");
-                server.Start();
-            }
-        );
     }
 
     // ReSharper disable once InconsistentNaming
@@ -76,7 +79,7 @@ internal sealed class ProxyPlugin : BasePlugin {
     [HarmonyPatch(typeof(HttpApiRequester), nameof(HttpApiRequester.SendRequest))]
     private static bool PrefixSendRequest(HttpApiRequester __instance, HttpApiSchema httpApiSchema, bool isUrgent) {
         foreach (var url in known_urls)
-            httpApiSchema._url = httpApiSchema._url.Replace(url, GetHostUrl());
+            httpApiSchema._url = httpApiSchema._url.Replace(url, GetActualHostUrl());
 
         if (!string.IsNullOrEmpty(identifierKey?.Value))
             httpApiSchema._url += $"?key={identifierKey.Value}";
@@ -86,7 +89,11 @@ internal sealed class ProxyPlugin : BasePlugin {
     }
     // ReSharper restore UnusedParameter.Local
 
-    private static string GetHostUrl() {
+    private static string GetActualHostUrl() {
+        return logPassthroughUrl ?? GetTargetHostUrl();
+    }
+
+    private static string GetTargetHostUrl() {
         var theProxyUrl = proxyUrl?.Value;
         return string.IsNullOrEmpty(theProxyUrl) ? default_host_url : theProxyUrl;
     }
