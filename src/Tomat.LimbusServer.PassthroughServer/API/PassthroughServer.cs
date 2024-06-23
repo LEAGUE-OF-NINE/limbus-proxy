@@ -81,7 +81,9 @@ public sealed class PassthroughServer : IPassthroughServer {
 
         State = ServerState.Stopping;
 
-        // TODO: Disposal logic.
+        listener.Stop();
+        listener.Close();
+        client.Dispose();
 
         State = ServerState.Stopped;
     }
