@@ -16,8 +16,6 @@ public sealed class PassthroughServer : IPassthroughServer {
 
     public string TargetServerAddress { get; }
 
-    public int TargetServerPort { get; }
-
     public event Func<HttpListenerContext, Task<bool>>? OnRequestReceived;
 
     public event Func<HttpListenerRequest, Task>? OnPreProcessRequest;
@@ -31,15 +29,12 @@ public sealed class PassthroughServer : IPassthroughServer {
     private readonly HttpListener listener = new();
     private readonly HttpClient client = new();
 
-    private PassthroughServer(string targetServerAddress, int targetServerPort) {
+    private PassthroughServer(string[] listeningAddresses, string targetServerAddress) {
         TargetServerHost = targetServerAddress.Split("://").Last().Trim('/');
         TargetServerAddress = targetServerAddress;
-        TargetServerPort = targetServerPort;
 
-        // If the user specifies a protocol (such as HTTP), then we use that.
-        // Otherwise, we only allow (default to) HTTPS. This means localhost
-        // needs to specify HTTP.
-        listener.Prefixes.Add(targetServerAddress.Contains("://") ? $"{targetServerAddress}:{targetServerPort}/" : $"https://{targetServerAddress}:{targetServerPort}/");
+        foreach (var address in listeningAddresses)
+            listener.Prefixes.Add(address);
     }
 
     public async Task Start() {
@@ -55,7 +50,7 @@ public sealed class PassthroughServer : IPassthroughServer {
         }
         catch (HttpListenerException e) {
             if (e.Message.Contains("Access is denied."))
-                Console.WriteLine("Failed to start server; access is denied. Try running as an administrator (or changing your port if you're attempting to connect to localhost).");
+                Console.WriteLine("Failed to start server; access is denied. Try running as an administrator (or changing your port if you're attempting to listen on localhost).");
 
             throw;
         }
@@ -135,7 +130,7 @@ public sealed class PassthroughServer : IPassthroughServer {
         }
     }
 
-    public static IPassthroughServer Create(string targetServerAddress, int targetServerPort) {
-        return new PassthroughServer(targetServerAddress, targetServerPort);
+    public static IPassthroughServer Create(string[] listeningAddresses, string targetAddress) {
+        return new PassthroughServer(listeningAddresses, targetAddress);
     }
 }

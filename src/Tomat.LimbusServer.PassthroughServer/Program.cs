@@ -6,37 +6,20 @@ namespace Tomat.LimbusServer.PassthroughServer;
 
 internal static class Program {
     /// <summary>
-    ///     The IP address to listen on (with or without a protocol); defaults
-    ///     to <c>http://127.0.0.1</c>.
+    ///     The IP address to listen on; defaults to <c>http://localhost:80/</c>.
     /// </summary>
-    private const string argument_ip = "--ip";
+    private const string argument_listening_addresses = "--listening-addresses";
 
     /// <summary>
-    ///     The port to listen on; defaults to <c>80</c>.
+    ///     The target address; defaults to <c>www.limbuscompanyapi.com</c>.
     /// </summary>
-    private const string argument_port = "--port";
-
-    private sealed class Arguments(string[] args) {
-        public string IpAddress { get; } = GetArgument(args, argument_ip) ?? "http://127.0.0.1";
-
-        public string Port { get; } = GetArgument(args, argument_port) ?? "80";
-
-        private static string? GetArgument(string[] args, string name) {
-            var nameIndex = Array.IndexOf(args, name);
-            if (nameIndex == -1 || nameIndex + 1 >= args.Length)
-                return null;
-
-            return args[nameIndex + 1];
-        }
-    }
+    private const string argument_target_address = "--target-address";
 
     internal static async Task Main(string[] args) {
-        var arguments = new Arguments(args);
-        var ip = arguments.IpAddress;
-        if (!ushort.TryParse(arguments.Port, out var port))
-            throw new ArgumentException($"Invalid port; expected a number between {ushort.MinValue} and {ushort.MaxValue} (but got {arguments.Port}).");
+        var listeningAddresses = (GetArgument(args, argument_listening_addresses) ?? "http://localhost:80/").Split(' ');
+        var targetAddress = GetArgument(args, argument_target_address) ?? "www.limbuscompanyapi.com";
 
-        var server = API.PassthroughServer.Create(ip, port);
+        var server = API.PassthroughServer.Create(listeningAddresses, targetAddress);
         await StartServer(server);
 
         // Server is either killed by killing the process or by pressing Ctrl+C.
@@ -55,5 +38,13 @@ internal static class Program {
         };
 
         await server.Start();
+    }
+
+    private static string? GetArgument(string[] args, string name) {
+        var nameIndex = Array.IndexOf(args, name);
+        if (nameIndex == -1 || nameIndex + 1 >= args.Length)
+            return null;
+
+        return args[nameIndex + 1];
     }
 }

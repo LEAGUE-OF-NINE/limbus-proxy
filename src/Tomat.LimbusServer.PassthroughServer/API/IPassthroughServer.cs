@@ -18,11 +18,6 @@ public interface IPassthroughServer : IServer {
     string TargetServerAddress { get; }
 
     /// <summary>
-    ///     The port of the target server.
-    /// </summary>
-    int TargetServerPort { get; }
-
-    /// <summary>
     ///     Invoked when a request is received.
     ///     <br />
     ///     Return <see langword="false"/> to skip processing the request.
