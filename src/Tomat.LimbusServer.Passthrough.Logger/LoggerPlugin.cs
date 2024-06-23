@@ -7,6 +7,7 @@ namespace Tomat.LimbusServer.Passthrough.Logger;
 /// <summary>
 ///     Logger mod plugin entrypoint.
 /// </summary>
+[BepInDependency("Tomat.LimbusServer.Proxy", "1.*")]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 internal sealed class LoggerPlugin : BasePlugin {
     public override void Load() {
